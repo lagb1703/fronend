@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import PrincipalPage from './Principal';
 /*import ShoppingCart from './shoppingCart';
 import Register from './register';
-import Login from './login';
-import Produt from './product';*/
+import Login from './login';*/
+import Produt from './product';
 import Header from './header';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -16,7 +16,8 @@ root.render(
     <Header/>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={PrincipalPage}/>
+        <Route path='/' element={<PrincipalPage/>}/>
+        <Route path="/p" element={<Produt/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
