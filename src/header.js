@@ -35,7 +35,7 @@ export default function Header(){
             <BrowserRouter>
                 <header className="w-full h-14 border-b-4 border-red-500 p-2">
                     <nav className="h-full flex justify-between mx-8">
-                        <Link to="#" className="h-full cursor-pointer">
+                        <Link to="/" className="h-full cursor-pointer">
                             <img className="h-full" src={require("./media/logox70.png")}/>
                         </Link>
                         <div className="h-full flex gap-x-10">
