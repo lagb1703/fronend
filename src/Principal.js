@@ -9,6 +9,7 @@ class Item{
   images = [];
   amount = 0;
   description = "";
+  cartAmount = 1;
   constructor(id, name, price, description, amount,
     images = [
       'https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg',
@@ -27,7 +28,7 @@ class Item{
 
 
 export default function PrincipalPage(){
-  const contextCart = useContext(cart);
+  const [contextCart, setContextCart] = useState(useContext(cart));
   const [which, setWhich] = useState(true);
   const [products, setProducts] = useState([])
   const [promp, setPromp] = useState(new Item(0, 'Basic Tee 6-Pack', 
@@ -37,11 +38,9 @@ export default function PrincipalPage(){
   useEffect(()=>{
     fetch("http://localhost/user",{
       method:"GET",
-      mode: 'cors',
       headers: new Headers({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-    }),
+        'Content-Type': 'application/json'
+      }),
     }).then((res)=>res.json()).then((json)=>{
       let items = [];
       json.map((product)=>{
@@ -134,13 +133,12 @@ export default function PrincipalPage(){
                     e.preventDefault();
                     let c = contextCart;
                     for(let i = c.length - 1; i >= 0; i--){
-                      if(c[i].id == promp.id){
+                      if(c[i].id === promp.id){
                         alert("ya lo agregaste a carrito");
                         setWhich(true); 
                         return;
                       }
                     }
-                    console.log(typeof(promp.id));
                     fetch("http://localhost/user",{
                             method:"PATCH",
                             mode: 'cors',

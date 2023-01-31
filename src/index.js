@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import PrincipalPage from './Principal';
 /*import ShoppingCart from './shoppingCart';
-import Register from './register';
-import Login from './login';*/
+import Register from './register';*/
+import Login from './login';
 import Header from './header';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -11,14 +11,13 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <>
+  <BrowserRouter>
     <Header />
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<PrincipalPage />} />
-      </Routes>
-    </BrowserRouter>
-  </>
+    <Routes>
+      <Route path='/' element={<PrincipalPage />} />
+      <Route path='/login' element={<Login />} />
+    </Routes>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

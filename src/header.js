@@ -1,13 +1,15 @@
-import { useContext } from "react";
-import {Link, BrowserRouter} from "react-router-dom";
-import { Fragment, useState } from 'react'
+import {Link, useNavigate} from "react-router-dom";
+import { Fragment, useState, useContext, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { cart } from "./contex";
+import { cart } from "./contex"; 
 
 function Product(promp){
     const product = promp.product;
-    const [amount, setAmount] = useState(1);
+    const total = promp.total;
+    const car = promp.car;
+    const value = promp.value;
+    const [amount, setAmount] = useState(product.cartAmount);
     return(
         <li className="flex py-6 	items-center">
             <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -22,7 +24,7 @@ function Product(promp){
             <div>
                 <div className="flex justify-between text-base font-medium text-gray-900">
                 <h3>
-                    <a href={"/"}>{product.name}</a>
+                    <a href={"/"} onClick={(e)=>{e.preventDefault()}}>{product.name}</a>
                 </h3>
                 <p className="ml-4">{product.price}</p>
                 </div>
@@ -41,9 +43,16 @@ function Product(promp){
                             headers: new Headers({
                               'Content-Type': 'application/json',
                               'Access-Control-Allow-Origin': '*',
-                          })
-                        }).then(()=>{
-                            setAmount(amount + 1);
+                            })
+                        }).then(res=>res.text()).then((n)=>{
+                            n = parseInt(n);
+                            if(n >= 0){
+                                total(product.price);
+                                setAmount(amount + 1);
+                                product.cartAmount += 1;
+                            }else{
+                                alert("lo lamentamos ya no hay existencias de ese producto")
+                            }
                         });
                     }
                 }}>+</button>
@@ -63,7 +72,9 @@ function Product(promp){
                               'Access-Control-Allow-Origin': '*',
                           })
                         }).then(()=>{
+                            total(-product.price);
                             setAmount(amount - 1);
+                            product.cartAmount -= 1;
                         });
                     }
                 }}>-</button>
@@ -74,6 +85,32 @@ function Product(promp){
                     <button
                         type="button"
                         className="font-medium text-red-600 hover:text-red-500"
+                        onClick={(e)=>{
+                            e.preventDefault();
+                            for(let i = value.length - 1; i >= 0; i--){
+                                if(value[i].id === product.id){
+                                    value.splice(i, 1)
+                                    break;
+                                }
+                            }
+                            fetch("http://localhost/user",{
+                                method:"PATCH",
+                                mode: 'cors',
+                                body:JSON.stringify({
+                                    id:product.id,
+                                    cantidad:amount
+                                }),
+                                headers: new Headers({
+                                'Content-Type': 'application/json',
+                                'Access-Control-Allow-Origin': '*',
+                                })
+                            }).then(()=>{
+                                car(value);
+                                total(-(product.price*amount));
+                                setAmount(0);
+                                product.cartAmount = 0;
+                            });
+                        }}
                     >
                         Remove
                     </button>
@@ -85,33 +122,59 @@ function Product(promp){
 }
 
 export default function Header(){
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const contextCart = useContext(cart);
+    const [total, setTotal] = useState(0);
+    const [contextCart, setContextCart] = useState(useContext(cart));
+    function posTotal(number){
+        if(total + number >= 0){
+            setTotal(total + number);
+            return;
+        }
+        setTotal(0);
+    }
+    function posCar(array){
+        setContextCart(array);
+    }
+    useEffect(()=>{
+        setTotal(0);
+        let total = 0;
+        contextCart.map((product)=>{
+            total += product.price*product.cartAmount;
+        });
+        setTotal(total);
+    }, [open]);
     return(
         <>
-            <BrowserRouter>
-                <header className="w-full h-14 border-b-4 border-red-500 p-2">
-                    <nav className="h-full flex justify-between mx-8">
-                        <Link to="/" className="h-full cursor-pointer">
-                            <img className="h-full" src={require("./media/logox70.png")} alt="poyo"/>
+            <header className="w-full h-14 border-b-4 border-red-500 p-2">
+                <nav className="h-full flex justify-between mx-8">
+                    <Link to="/" className="h-full cursor-pointer" 
+                    onClick={(e)=>{
+                        e.preventDefault();
+                        navigate("/");
+                    }}>
+                        <img className="h-full" src={require("./media/logox70.png")} alt="poyo"/>
+                    </Link>
+                    <div className="h-full flex gap-x-10">
+                        <Link to="/login" relative="path" className="h-full flex items-center cursor-pointer" onClick={(e)=>{
+                            e.preventDefault();
+                            navigate("/login");
+                        }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                            </svg>
                         </Link>
-                        <div className="h-full flex gap-x-10">
-                            <Link to="#" className="h-full flex items-center cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                                </svg>
-                            </Link>
-                            <Link to="#" className="h-full flex items-center cursor-pointer" onClick={()=>{
-                                setOpen(true);
-                                }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                    <path strokeinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                </svg>
-                            </Link>
-                        </div>
-                    </nav>
-                </header>
-            </BrowserRouter>
+                        <Link to="/" relative="path" className="h-full flex items-center cursor-pointer" onClick={(e)=>{
+                            e.preventDefault();
+                            setOpen(true);
+                            }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path strokeinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                            </svg>
+                        </Link>
+                    </div>
+                </nav>
+            </header>
             <Transition.Root show={open} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={setOpen}>
                     <Transition.Child
@@ -159,7 +222,7 @@ export default function Header(){
                                             <div className="flow-root">
                                             <ul role="list" className="-my-6 divide-y divide-gray-200">
                                                 {contextCart.map((product) => (
-                                                    <Product key={10 + product.id} product={product}/>
+                                                    <Product key={10 + product.id} product={product} total={posTotal} car={posCar} value={contextCart}/>
                                                 ))}
                                             </ul>
                                             </div>
@@ -169,7 +232,7 @@ export default function Header(){
                                         <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                                             <div className="flex justify-between text-base font-medium text-gray-900">
                                                 <p>Subtotal</p>
-                                                <p>$262.00</p>
+                                                <p>{total}</p>
                                             </div>
                                             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                             <div className="mt-6">
