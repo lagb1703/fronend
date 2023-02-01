@@ -79,13 +79,13 @@ export default function Login() {
                           alert("correo o contraseña erroneos");
                           return;
                         }
-                        user.name = json.nombre;
-                        user.type = json.type;
-                        if(user.type == 1){
-                          user.password = json.password;
+                        user[0].name = json.nombre;
+                        user[0].type = json.tipo;
+                        if(user[0].type == 1){
+                          user[0].password = json.password;
                           navigate("/admin");
                         }else{
-                          user.password = "";
+                          user[0].password = "";
                           navigate("/");
                         }
                     });
@@ -270,9 +270,9 @@ export default function Login() {
                           })
                         }).then((res)=>res.text()).then(()=>{
                           alert("usuario registrado");
-                          user.name = name;
-                          user.password = "";
-                          user.type = 0;
+                          user[0].name = name;
+                          user[0].password = "";
+                          user[0].type = 0;
                           navigate("/");
                         });
                       });

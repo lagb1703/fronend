@@ -149,7 +149,7 @@ export default function PrincipalPage(){
                             headers: new Headers({
                               'Content-Type': 'application/json',
                               'Access-Control-Allow-Origin': '*',
-                          })
+                            })
                         }).then((res)=>res.text()).then((n)=>{
                           if(n > 0){
                             contextCart.push(promp);

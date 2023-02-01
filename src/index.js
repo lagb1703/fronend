@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import PrincipalPage from './Principal';
-/*import ShoppingCart from './shoppingCart';
-import Register from './register';*/
+import Page from './admin';
 import Login from './login';
 import Header from './header';
 import './index.css';
@@ -15,7 +14,8 @@ root.render(
     <Header />
     <Routes>
       <Route path='/' element={<PrincipalPage />} />
-      <Route path='/login' element={<Login />} />
+      <Route path='/login' element={<Login />}/>
+      <Route path='/admin' element={<Page />}/>
     </Routes>
   </BrowserRouter>
 );
