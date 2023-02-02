@@ -11,11 +11,11 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <Header />
-    <Routes>
-      <Route path='/' element={<PrincipalPage />} />
-      <Route path='/login' element={<Login />}/>
-      <Route path='/admin' element={<Page />}/>
+    <Header />{/*el header esta en todas las paginas*/}
+    <Routes>{/*aca comienza el enrutamiento*/}
+      <Route path='/' element={<PrincipalPage />} />{/*enrutamiento pagina principal*/}
+      <Route path='/login' element={<Login />}/>{/*enrutamiento login*/}
+      <Route path='/admin' element={<Page />}/>{/*enrutamiento del administrador*/}
     </Routes>
   </BrowserRouter>
 );
@@ -23,4 +23,4 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals();//algo del reactmejor no tacar

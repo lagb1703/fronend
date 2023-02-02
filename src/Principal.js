@@ -2,13 +2,16 @@ import { useState, useEffect, useContext } from "react";
 import { cart } from "./contex";
 
 
+/**
+ * se utilizaran para guardar un formato del producto
+ */
 class Item{
-  id = 0;
-  name = "";
-  price = "";
-  images = [];
-  amount = 0;
-  description = "";
+  id = 0;//se guardara el id
+  name = "";//se guardara el nombre
+  price = "";//se guardara el precio
+  images = [];//se guardara las imagene
+  amount = 0;//se guarda el stock del producto
+  description = "";//
   cartAmount = 1;
   constructor(id, name, price, description, amount,
     images = [
@@ -28,14 +31,15 @@ class Item{
 
 
 export default function PrincipalPage(){
-  const [contextCart, setContextCart] = useState(useContext(cart));
-  const [which, setWhich] = useState(true);
-  const [products, setProducts] = useState([])
+  const [contextCart, setContextCart] = useState(useContext(cart));//se obtiene el contexto del carrito de comnpras para utilizarlo despuesx
+  const [which, setWhich] = useState(true);//aca se decide si se renderiza los productos o el producto
+  const [products, setProducts] = useState([]);//aca se guardaran los productos del carrito
   const [promp, setPromp] = useState(new Item(0, 'Basic Tee 6-Pack', 
                                               '$192',
                                               5,
-                                              'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.'));
-  useEffect(()=>{
+                                              'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.'
+                                              ));//aca se guardara el producto a mostrar, tiene un producto por defecto
+  useEffect(()=>{//este useEffect se utiliza para
     fetch("http://localhost/user",{
       method:"GET",
       headers: new Headers({
