@@ -5,16 +5,16 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { cart } from "./contex"; 
 
 function Product(promp){
-    const product = promp.product;
-    const total = promp.total;
-    const car = promp.car;
-    const value = promp.value;
-    const [amount, setAmount] = useState(product.cartAmount);
+    const PRODUCT = promp.product;//obtenemso el producto
+    const total = promp.total;//se modifica el state total del padre
+    const car = promp.car;//se modifica el carrito en el padre
+    const value = promp.value;//se obtiene el valor del carrito del padre
+    const [amount, setAmount] = useState(PRODUCT.cartAmount);
     return(
-        <li className="flex py-6 	items-center">
+        <li className="flex py-6 items-center">
             <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
             <img
-                src={product.images[0]}
+                src={PRODUCT.images[0]}//la imagen principal del proyecto
                 alt={"poyo"}
                 className="h-full w-full object-cover object-center"
             />
@@ -24,20 +24,20 @@ function Product(promp){
             <div>
                 <div className="flex justify-between text-base font-medium text-gray-900">
                 <h3>
-                    <a href={"/"} onClick={(e)=>{e.preventDefault()}}>{product.name}</a>
+                    <a href={"/"} onClick={(e)=>{e.preventDefault()}}>{PRODUCT.name}</a>
                 </h3>
-                <p className="ml-4">{product.price}</p>
+                <p className="ml-4">{PRODUCT.price}</p>
                 </div>
             </div>
             <div className="flex items-center justify-end">
                 <button className="p-2 text-red-600 hover:text-red-500 text-3xl" onClick={(e)=>{
                     e.preventDefault();
-                    if(product.amount - amount > 0){
+                    if(PRODUCT.amount - amount > 0){
                         fetch("http://localhost/user",{
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
-                                id:product.id,
+                                id:PRODUCT.id,
                                 cantidad:-1
                             }),
                             headers: new Headers({
@@ -47,9 +47,9 @@ function Product(promp){
                         }).then(res=>res.text()).then((n)=>{
                             n = parseInt(n);
                             if(n >= 0){
-                                total(product.price);
+                                total(PRODUCT.price);
                                 setAmount(amount + 1);
-                                product.cartAmount += 1;
+                                PRODUCT.cartAmount += 1;
                             }else{
                                 alert("lo lamentamos ya no hay existencias de ese producto")
                             }
@@ -64,7 +64,7 @@ function Product(promp){
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
-                                id:product.id,
+                                id:PRODUCT.id,
                                 cantidad:1
                             }),
                             headers: new Headers({
@@ -72,7 +72,7 @@ function Product(promp){
                               'Access-Control-Allow-Origin': '*',
                           })
                         }).then(()=>{
-                            total(-product.price);
+                            total(-PRODUCT.price);
                             setAmount(amount - 1);
                             product.cartAmount -= 1;
                         });
@@ -80,7 +80,7 @@ function Product(promp){
                 }}>-</button>
             </div>
             <div className="flex flex-1 items-end justify-between text-sm">
-                <p className="text-gray-500">amount {product.amount - amount}</p>
+                <p className="text-gray-500">amount {PRODUCT.amount - amount}</p>
                 <div className="flex">
                     <button
                         type="button"
@@ -88,7 +88,7 @@ function Product(promp){
                         onClick={(e)=>{
                             e.preventDefault();
                             for(let i = value.length - 1; i >= 0; i--){
-                                if(value[i].id === product.id){
+                                if(value[i].id === PRODUCT.id){
                                     value.splice(i, 1)
                                     break;
                                 }
@@ -97,7 +97,7 @@ function Product(promp){
                                 method:"PATCH",
                                 mode: 'cors',
                                 body:JSON.stringify({
-                                    id:product.id,
+                                    id:PRODUCT.id,
                                     cantidad:amount
                                 }),
                                 headers: new Headers({
@@ -106,9 +106,9 @@ function Product(promp){
                                 })
                             }).then(()=>{
                                 car(value);
-                                total(-(product.price*amount));
+                                total(-(PRODUCT.price*amount));
                                 setAmount(0);
-                                product.cartAmount = 0;
+                                PRODUCT.cartAmount = 0;
                             });
                         }}
                     >
