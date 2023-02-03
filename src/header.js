@@ -235,7 +235,7 @@ export default function Header(){
                 })
             })
         });
-        contextCart.splice(0,contextCart.length - 1);
+        contextCart.splice(0,contextCart.length);
         setTotal(0);
     }
     useEffect(()=>{//se usa useEffect para calcular el total que hay en el carrito
