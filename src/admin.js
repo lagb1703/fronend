@@ -16,6 +16,7 @@ function Product(promp){
       <div className='flex flex-col gap-5 w-2/3'>{/*un supercontenedoor para la informacion del producto*/}
         <p>{product.nombre}</p>{/*nombre del producto*/}
         <div className='flex justify-between w-full '>{/*contenedor para los inputs*/}
+          {/*dejo un espacio para poner el input de precio*/}
           <input type="number" placeholder='0' id={"minimun-"+product.id} className='w-20' value={product.minimo}/>{/*con id se crea un id unico*/}
           <input type="number" placeholder='5' id={"amount-"+product.id} className='w-20'value={product.cantidad}/>
           <input type="number" placeholder='10' id={"maximun-"+product.id} className='w-20' value={product.maximo}/>
@@ -82,6 +83,9 @@ export default function Page() {
           <button className='flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700 mt-10'
           onClick={(e)=>{//se manda los nuevos datos
             e.preventDefault();
+            /**
+             * Nota dejo el espacio para cambiar el precio porque quiero probar un punto
+             */
             let password = document.getElementById("password").value;//obtiene el valor de la nueva password
             let address = document.getElementById("address").value;//obtiene la nueva direccion del administracio
             let phone = document.getElementById("phone").value;//se obtiene el nuevo telefono del usuario

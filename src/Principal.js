@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
-import { cart } from "./contex";
+import {useNavigate} from "react-router-dom";
+import { cart, user } from "./contex";
 
 
 /**
@@ -11,8 +12,8 @@ class Item{
   price = "";//se guardara el precio
   images = [];//se guardara las imagene
   amount = 0;//se guarda el stock del producto
-  description = "";//
-  cartAmount = 1;
+  description = "";//se guardara la descripcion del producto
+  cartAmount = 1;//guardara la cantidad que se ingreso en el carrito
   constructor(id, name, price, description, amount,
     images = [
       'https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg',
@@ -31,6 +32,7 @@ class Item{
 
 
 export default function PrincipalPage(){
+  const NAVIGATE = useNavigate();
   const [contextCart, setContextCart] = useState(useContext(cart));//se obtiene el contexto del carrito de comnpras para utilizarlo despuesx
   const [which, setWhich] = useState(true);//aca se decide si se renderiza los productos o el producto
   const [products, setProducts] = useState([]);//aca se guardaran los productos del carrito
@@ -40,38 +42,38 @@ export default function PrincipalPage(){
                                               'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.'
                                               ));//aca se guardara el producto a mostrar, tiene un producto por defecto
   useEffect(()=>{//este useEffect se utiliza para
-    fetch("http://localhost/user",{
+    fetch("http://localhost/user",{//se piden los productos a la base de datos
       method:"GET",
       headers: new Headers({
         'Content-Type': 'application/json'
       }),
     }).then((res)=>res.json()).then((json)=>{
-      let items = [];
+      let items = [];//se guardara los items
       json.map((product)=>{
-        items = items.concat({id:product.id, name:product.nombre, price:product.precio, description:product.descripcion, amount:product.cantidad, imageAlt:"poyo", images:product.imagenes});
-        return "a";
+        items = items.concat({id:product.id, name:product.nombre, price:product.precio, description:product.descripcion, amount:product.cantidad, imageAlt:"poyo", images:product.imagenes});//se agrega un JSON con las prodiedades que vamos a usar
+        return "a";//retornamos algo para evitar un error en consola
       });
-      setProducts(items);
+      setProducts(items);//se rellena el array
     });
-  },[]);
-  if(which){
+  },[]);//se ejecuta cada ves que se renderize el componente
+  if(which){//si es verdadero se renderiza una lista de diez productos
     return(
       <div className="bg-white">
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
             <h2 className="sr-only">Products</h2>
             <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {products.map((product) => (
+              {products.map((product) => (//aca se renderiza los productos de la lista de products
                   <a href="/" key={product.id} 
-                  onClick={(e)=>{
+                  onClick={(e)=>{//si se unde en un producto se va directamente a su contraparte
                     e.preventDefault();
                     setPromp(new Item(product.id, product.name, product.price, product.description, product.amount, product.images));
-                    setWhich(false);
+                    setWhich(false);//se habre la vista de producto
                   }} 
                   className="group cursor-pointer">
                     <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
                         <img
-                        src={product.images[0]}
-                        alt={product.imageAlt}
+                        src={product.images[0]}//se muestra la imagen principal
+                        alt={product.imageAlt}//se pone un descripcion pequeña a la imagen, normalmente sera poyo
                         className="h-full w-full object-cover object-center group-hover:opacity-75"
                         />
                     </div>
@@ -83,7 +85,7 @@ export default function PrincipalPage(){
         </div>
       </div>
     )
-  }else{
+  }else{//si which es falso simplemente se renderizara la vista de producto
     return(
       <div className="bg-white">
         <div className="pt-6">
@@ -91,7 +93,7 @@ export default function PrincipalPage(){
           <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
             <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
               <img
-                src={promp.images[0]}
+                src={promp.images[0]}//se coloca la imagen principal
                 alt={"poyo"}
                 className="h-full w-full object-cover object-center"
               />
@@ -99,14 +101,14 @@ export default function PrincipalPage(){
             <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
               <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
                 <img
-                  src={promp.images[1]}
+                  src={promp.images[1]}//se coloca la imagen secundaria
                   alt={"poyo"}
                   className="h-full w-full object-cover object-center"
                 />
               </div>
               <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
                 <img
-                  src={promp.images[2]}
+                  src={promp.images[2]}//se coloca la imagen tercearia
                   alt={"poyo"}
                   className="h-full w-full object-cover object-center"
                 />
@@ -114,7 +116,7 @@ export default function PrincipalPage(){
             </div>
             <div className="aspect-w-4 aspect-h-5 sm:overflow-hidden sm:rounded-lg lg:aspect-w-3 lg:aspect-h-4">
               <img
-                src={promp.images[3]}
+                src={promp.images[3]}//se coloca la imagen cuartenaria
                 alt={"poyo"}
                 className="h-full w-full object-cover object-center"
               />
@@ -135,15 +137,25 @@ export default function PrincipalPage(){
                 <button
                   onClick={(e)=>{
                     e.preventDefault();
-                    let c = contextCart;
-                    for(let i = c.length - 1; i >= 0; i--){
-                      if(c[i].id === promp.id){
+                    if(user.name == ""){
+                      alert("Tienes que estar registrado para poder reservar productos");
+                      NAVIGATE("/login");
+                      return;
+                    }
+                    if(user.name == 1){
+                      alert("eres administrador no cliente");
+                      NAVIGATE("/login");
+                      return;
+                    }
+                    let c = contextCart;//se obtiene el el valor del carrito
+                    for(let i = c.length - 1; i >= 0; i--){//se revisa si ya lo agrego
+                      if(c[i].id === promp.id){//si es asi lo devuleve a la vista secundaria
                         alert("ya lo agregaste a carrito");
                         setWhich(true); 
                         return;
                       }
                     }
-                    fetch("http://localhost/user",{
+                    fetch("http://localhost/user",{//se reserva el producto
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
@@ -154,8 +166,8 @@ export default function PrincipalPage(){
                               'Content-Type': 'application/json',
                               'Access-Control-Allow-Origin': '*',
                             })
-                        }).then((res)=>res.text()).then((n)=>{
-                          if(n > 0){
+                        }).then((res)=>res.text()).then((n)=>{//devuelve un numero que representa el stock restante
+                          if(n >= 0){//si es positiva si se guardo el producto
                             contextCart.push(promp);
                           }else{
                             alert("no queda productos");
