@@ -1,6 +1,5 @@
 import {user as u} from "./contex";
 import { useContext, useEffect, useState } from "react";
-import { json } from "react-router";
 
 function Product(promp){
   const user = useContext(u);//se obtiene el usuario
@@ -17,9 +16,9 @@ function Product(promp){
         <p>{product.nombre}</p>{/*nombre del producto*/}
         <div className='flex justify-between w-full '>{/*contenedor para los inputs*/}
           {/*dejo un espacio para poner el input de precio*/}
-          <input type="number" placeholder='0' id={"minimun-"+product.id} className='w-20' value={product.minimo}/>{/*con id se crea un id unico*/}
-          <input type="number" placeholder='5' id={"amount-"+product.id} className='w-20'value={product.cantidad}/>
-          <input type="number" placeholder='10' id={"maximun-"+product.id} className='w-20' value={product.maximo}/>
+          <input type="number" placeholder='0' id={"minimun-"+product.id} className='w-20' defaultValue={product.minimo}/>{/*con id se crea un id unico*/}
+          <input type="number" placeholder='5' id={"amount-"+product.id} className='w-20'defaultValue={product.cantidad}/>
+          <input type="number" placeholder='10' id={"maximun-"+product.id} className='w-20' defaultValue={product.maximo}/>
         </div>
       </div>
       <button className="'flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700 mt-10'"
@@ -61,7 +60,7 @@ export default function Page() {
     });
     fetch("http://localhost/sql?selector=*&tabla=usuarios&limit=1&where=nombre = '" + user[0].name + "'")//se consulta sobre el usuario en la base de datos
     .then((res)=>res.json()).then((json)=>{
-      setAdmin({id:json.id, pasword:json.contraseña, addres:json.direccion, phone:json.telefono, email:json.correo});
+      setAdmin({id:json[0].id, pasword:json[0].contraseña, addres:json[0].direccion, phone:json[0].telefono, email:json[0].correo});
     });
   }, []);
 
@@ -74,7 +73,7 @@ export default function Page() {
     <main className='m-20'>
       <form className='flex flex-col'>
         <div className='flex justify-between flex-wrap'>
-          <input id="password" type="password"placeholder='Password' value={"pepe"}/>
+          <input id="password" type="password"placeholder='Password'/>
           <input id="address" type="text" placeholder='Address'/>
           <input id="phone" type="number" placeholder='Phone'/>
           <input id="email" type="email" placeholder='Email'/>
@@ -98,15 +97,17 @@ export default function Page() {
               alert("cuidado no pusiste un email");
               return;
             }
+            console.log(user[0]);
             fetch("http://localhost/sql",{//se manda la peticion al servidor
               method:"PUT",
               body:JSON.stringify({
                 tabla: "usuarios",
-                password: user.password,
+                password: user[0].password,       
                 contraseña:password,
                 direccion: address,
                 telefono: phone,
-                correo: email
+                correo: email,
+                id: admin.id
               }),
               headers: new Headers({
                 'Content-Type': 'application/json',

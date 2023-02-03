@@ -137,14 +137,15 @@ export default function PrincipalPage(){
                 <button
                   onClick={(e)=>{
                     e.preventDefault();
-                    if(user.name == ""){
+                    console.log(user._currentValue[0]);
+                    if(user._currentValue[0].name == ""){//se pregunta si estas logueado
                       alert("Tienes que estar registrado para poder reservar productos");
                       NAVIGATE("/login");
                       return;
                     }
-                    if(user.name == 1){
+                    if(user._currentValue[0].type == 1){//se pregunta si eres el administrador
                       alert("eres administrador no cliente");
-                      NAVIGATE("/login");
+                      NAVIGATE("/admin");
                       return;
                     }
                     let c = contextCart;//se obtiene el el valor del carrito

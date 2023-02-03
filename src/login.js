@@ -1,10 +1,10 @@
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import {user as u} from "./contex";
 import { useState, useContext } from 'react'
-import {useNAVIGATE} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export default function Login() {
-  const NAVIGATE = useNAVIGATE();//se obtiene la navegacion
+  const NAVIGATE = useNavigate();//se obtiene la navegacion
   const [which, setWhich] = useState(true);//para renderizar el ligon o el register
   const user = useContext(u);//obtienes el usuario
   if(which){//si es true como el estado inicial se mostrara unicamente el login

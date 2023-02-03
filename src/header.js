@@ -3,13 +3,79 @@ import { Fragment, useState, useContext, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { cart } from "./contex"; 
+import {loadStripe} from '@stripe/stripe-js';
+import {Elements, CardElement, useElements} from '@stripe/react-stripe-js'
+import {useStripe} from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe('pk_test_51MXFXqCoW04gSSqlj7hURnPOUhPGQgJ6pFIzRBg5TalxwRkiOeYA0k5NxgzK6wHCglYmX0AKmB3RwDtly6XmomCD00N1pSlQRb');
+
+function PayModal(promp){
+    const comprar = promp.comprar;
+    const stripe = useStripe();
+    const elements = useElements();
+    function sumit(e){
+        e.preventDefault();
+        stripe.createPaymentMethod({
+            type: 'card',
+            card: elements.getElement(CardElement)
+        }).then((paymentMethod)=>{
+            if(!paymentMethod.paymentMethod){
+                alert("tienes que agragar una tarjeta valida");
+                return;
+            }
+            fetch("http://localhost/pay",{
+                method: "POST",
+                body:JSON.stringify({
+                    id:paymentMethod.paymentMethod.id,
+                    amount: promp.amount,
+                    description: promp.description
+                }),
+                headers: new Headers({
+                  'Content-Type': 'application/json'
+                }),
+            }).then((res)=>{
+                if(res.status === 204){
+                    comprar();
+                    alert("pago procesado");
+                    return;
+                }
+                alert("hubo un error en el pago");
+            });
+        }).catch((e)=>{
+            console.log(e);
+            alert("hubo un error en el pago");
+        })
+    }
+    return(
+        <form onSubmit={sumit} className="flex flex-col justify-center mt-10">
+            <CardElement className="m-4"/>
+            <div className="flex justify-center mt-6">
+                <button
+                    className="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
+                    onClick={(e)=>{
+                        if(promp.amount <= 0){
+                            e.preventDefault();
+                            alert("agrega cosas al carro");
+                        }
+                        if(promp.amount < 10000){
+                            e.preventDefault();
+                            alert("El valor minimo de compra es $10000");
+                        }
+                    }}
+                >
+                Pay
+                </button>{/*link de pago*/}
+            </div>
+        </form>
+    )
+}
 
 function Product(promp){
     const PRODUCT = promp.product;//obtenemso el producto
     const total = promp.total;//se modifica el state total del padre
     const car = promp.car;//se modifica el carrito en el padre
     const VALUE = promp.value;//se obtiene el valor del carrito del padre
-    const [amount, setAmount] = useState(PRODUCT.cartAmount);
+    const [amount, setAmount] = useState(PRODUCT.cartAmount);//se guarda la cantidad del producto
     return(
         <li className="flex py-6 items-center">{/*cada producto es un item de una lista ul*/}
             <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -144,9 +210,33 @@ export default function Header(){
      * 
      * @param {product[]} array 
      * @descripcion setea el carrito al valor que queremos desde el componente hijo
+     * @returns {void}
      */
     function posCar(array){
         setContextCart(array);
+    }
+
+    /**
+     * @returns {void}
+     * @description ELIMINAR TODO EL CARRITO Y LE DICE AL SERVIDOR QUE RESTE LA CANTIDAD DE PRODUCTOS A LA BASE DE DATOS
+     */
+    function comprar(){
+        contextCart.map((item)=>{
+            fetch("http://localhost/user",{//se envia la peticion al backend para guardar el producto
+                method:"PUT",
+                mode: 'cors',
+                body:JSON.stringify({
+                    id:item.id,
+                    cantidad:-item.cartAmount
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                })
+            })
+        });
+        contextCart.splice(0,contextCart.length - 1);
+        setTotal(0);
     }
     useEffect(()=>{//se usa useEffect para calcular el total que hay en el carrito
         setTotal(0);
@@ -187,6 +277,7 @@ export default function Header(){
                     </div>
                 </nav>
             </header>
+            
             <Transition.Root show={open} as={Fragment}>{/*pertenece a la libreria de @headlessui no me hago cargo de su funcionamiento*/}
                 <Dialog as="div" className="relative z-10" onClose={setOpen}>
                     <Transition.Child //pertenece a la libreria de @headlessui no me hago cargo de su funcionamiento
@@ -247,14 +338,9 @@ export default function Header(){
                                                 <p>{total}</p>{/*se renderiza el total de las compras*/}
                                             </div>
                                             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>{/*frase de prueba puede cambiar en un futuro*/}
-                                            <div className="mt-6">
-                                                <a
-                                                href="/"
-                                                className="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
-                                                >
-                                                Pay
-                                                </a>{/*link de pago*/}
-                                            </div>
+                                            <Elements stripe={stripePromise}>
+                                                <PayModal  amount={total} description={"es una compra"} comprar={comprar}/>
+                                            </Elements>
                                             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                                 <p>
                                                 or 
