@@ -8,7 +8,7 @@ function Product(promp){
     <form className='flex gap-5 border-2 rounded-md justify-between'>{/*todo estara dentro de un form*/}
       <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>{/*Crea el marco para la imagen*/}
         <img 
-        src={product.imagenes[0]} 
+        src={product.imagenes[0]}//ponemos la imagen principal 
         alt="poyo"
         className='h-full w-full object-cover object-center'/>{/*se pone la imagen principal del producto*/}
       </div>
@@ -16,14 +16,16 @@ function Product(promp){
         <p>{product.nombre}</p>{/*nombre del producto*/}
         <div className='flex justify-between w-full '>{/*contenedor para los inputs*/}
           {/*dejo un espacio para poner el input de precio*/}
-          <input type="number" placeholder='0' id={"minimun-"+product.id} className='w-20' defaultValue={product.minimo}/>{/*con id se crea un id unico*/}
-          <input type="number" placeholder='5' id={"amount-"+product.id} className='w-20'defaultValue={product.cantidad}/>
-          <input type="number" placeholder='10' id={"maximun-"+product.id} className='w-20' defaultValue={product.maximo}/>
+          <input type="number" placeholder='precio' id={"precio-"+product.id} className='w-20' defaultValue={product.price}/>
+          <input type="number" placeholder='minimo' id={"minimun-"+product.id} className='w-20' defaultValue={product.minimo}/>{/*con id se crea un id unico*/}
+          <input type="number" placeholder='cantidad' id={"amount-"+product.id} className='w-20'defaultValue={product.cantidad}/>
+          <input type="number" placeholder='maximo' id={"maximun-"+product.id} className='w-20' defaultValue={product.maximo}/>
         </div>
       </div>
       <button className="'flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700 mt-10'"
       onClick={(e)=>{
         e.preventDefault();
+        let price = document.getElementById("precio-"+product.id).value;//aca recojeremos la informacion del precio
         let minimun = document.getElementById("minimun-"+product.id).value;//aca recojeremos la informacion del minimo
         let amount = document.getElementById("amount-"+product.id).value;//aca recojeremos la informacion de la cantidad
         let maximun = document.getElementById("maximun-"+product.id).value;//aca recojeremos la informacion del maximo
@@ -35,6 +37,7 @@ function Product(promp){
             minimo:minimun,
             cantidad:amount,
             maximo:maximun,
+            precio:price,
             id:product.id
           }),
           headers: new Headers({

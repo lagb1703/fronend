@@ -10,20 +10,26 @@ import {useStripe} from '@stripe/react-stripe-js';
 const stripePromise = loadStripe('pk_test_51MXFXqCoW04gSSqlj7hURnPOUhPGQgJ6pFIzRBg5TalxwRkiOeYA0k5NxgzK6wHCglYmX0AKmB3RwDtly6XmomCD00N1pSlQRb');
 
 function PayModal(promp){
-    const comprar = promp.comprar;
-    const stripe = useStripe();
+    const comprar = promp.comprar;//se recoge la funcion para comprar
+    const stripe = useStripe();//se hace la coneccion con stripe
     const elements = useElements();
+    /**
+     * 
+     * @param {Event} e 
+     * @returns {undefined}
+     * @description esta funcion recoje los input de los elementos del form y los envia al backend
+     */
     function sumit(e){
         e.preventDefault();
-        stripe.createPaymentMethod({
+        stripe.createPaymentMethod({//le hacemos una peticion a stripe
             type: 'card',
-            card: elements.getElement(CardElement)
-        }).then((paymentMethod)=>{
-            if(!paymentMethod.paymentMethod){
+            card: elements.getElement(CardElement)//le entregamos el valor del inpit
+        }).then((paymentMethod)=>{//obtenemos la repuesta
+            if(!paymentMethod.paymentMethod){//observamos si se tiene un formato correcto
                 alert("tienes que agragar una tarjeta valida");
                 return;
             }
-            fetch("http://localhost/pay",{
+            fetch("http://localhost/pay",{//le mandamos la peticion al backen de la comprar
                 method: "POST",
                 body:JSON.stringify({
                     id:paymentMethod.paymentMethod.id,
@@ -33,31 +39,31 @@ function PayModal(promp){
                 headers: new Headers({
                   'Content-Type': 'application/json'
                 }),
-            }).then((res)=>{
-                if(res.status === 204){
-                    comprar();
+            }).then((res)=>{//obtenemos la repuesta
+                if(res.status === 204){//si el estatos es de 204 significa que se logro la compra
+                    comprar();//eliminamos todo del carrito
                     alert("pago procesado");
                     return;
                 }
                 alert("hubo un error en el pago");
             });
-        }).catch((e)=>{
-            console.log(e);
+        }).catch((e)=>{//obtenemos el error
+            console.log(e);//lo imprimimos
             alert("hubo un error en el pago");
         })
     }
     return(
         <form onSubmit={sumit} className="flex flex-col justify-center mt-10">
-            <CardElement className="m-4"/>
+            <CardElement className="m-4"/>{/*componente de stripe*/}
             <div className="flex justify-center mt-6">
                 <button
                     className="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
                     onClick={(e)=>{
-                        if(promp.amount <= 0){
+                        if(promp.amount <= 0){//verificamos que la cantidad no sea cero
                             e.preventDefault();
                             alert("agrega cosas al carro");
                         }
-                        if(promp.amount < 10000){
+                        if(promp.amount < 10000){//verificamos si cumple la entrega minima
                             e.preventDefault();
                             alert("El valor minimo de compra es $10000");
                         }

@@ -168,9 +168,9 @@ export default function PrincipalPage(){
                             })
                         }).then((res)=>res.text()).then((n)=>{//devuelve un numero que representa el stock restante
                           if(n >= 0){//si es positiva si se guardo el producto
-                            contextCart.push(promp);
-                          }else{
-                            alert("no queda productos");
+                            contextCart.push(promp);//se agrega el producto
+                          }else{//else
+                            alert("no queda productos");//se le indica al usuario que y ano quedan productos
                           }
                         });
                     //
