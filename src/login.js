@@ -69,7 +69,7 @@ export default function Login() {
                       alert("correo o contraseña erroneos");
                       return;
                     }
-                    fetch("http://localhost/email?email=" + email).then((res)=>res.json()).then((json)=>{//se obtiene la respuesta del backend
+                    fetch("https://pollopunto.onrender.com/email?email=" + email).then((res)=>res.json()).then((json)=>{//se obtiene la respuesta del backend
                         if(!json){//si no existe el correo simplemente le servidor mandara undefined
                           alert("correo o contraseña erroneos");
                           return;
@@ -247,13 +247,13 @@ export default function Login() {
                         alert("Algunos campos estan sin rellenar");
                         return;
                       }
-                      fetch("http://localhost/email?email="+email).then(res=>res.json()).then((json)=>{//se hace la peticion a la base de datos para verificar qi el correo esta en uso
+                      fetch("https://pollopunto.onrender.com/email?email="+email).then(res=>res.json()).then((json)=>{//se hace la peticion a la base de datos para verificar qi el correo esta en uso
                         if(json.password !== ""){
                           alert("correo ya en uso");
                           return;
                         }
                         let ubication = `${country} ${region} ${city} ${streetaddress}`;//se une toda la direccion en general
-                        fetch("http://localhost/user",{//se hace la peticion a la base de datos para crear unn nuevo usuario
+                        fetch("https://pollopunto.onrender.com/user",{//se hace la peticion a la base de datos para crear unn nuevo usuario
                             method:"POST",
                             mode: 'cors',
                             body:JSON.stringify({

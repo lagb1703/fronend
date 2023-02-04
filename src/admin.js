@@ -29,7 +29,7 @@ function Product(promp){
         let minimun = document.getElementById("minimun-"+product.id).value;//aca recojeremos la informacion del minimo
         let amount = document.getElementById("amount-"+product.id).value;//aca recojeremos la informacion de la cantidad
         let maximun = document.getElementById("maximun-"+product.id).value;//aca recojeremos la informacion del maximo
-        fetch("http://localhost/sql",{//se hace la peticion al servidor
+        fetch("https://pollopunto.onrender.com/sql",{//se hace la peticion al servidor
           method:"PUT",
           body:JSON.stringify({
             tabla: "productos",
@@ -57,11 +57,11 @@ export default function Page() {
   const [products, setProducts] = useState([]);//se guardara todos los productos
   const [admin, setAdmin] = useState({id:0, pasword:"", address:"", phone:0, email:""});
   useEffect(()=>{
-    fetch("http://localhost/sql?selector=*&tabla=productos&limit=10")//se consulta los productos al backend
+    fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=productos&limit=10")//se consulta los productos al backend
     .then((res)=>res.json()).then((json)=>{
       setProducts(json);
     });
-    fetch("http://localhost/sql?selector=*&tabla=usuarios&limit=1&where=nombre = '" + user[0].name + "'")//se consulta sobre el usuario en la base de datos
+    fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=usuarios&limit=1&where=nombre = '" + user[0].name + "'")//se consulta sobre el usuario en la base de datos
     .then((res)=>res.json()).then((json)=>{
       setAdmin({id:json[0].id, pasword:json[0].contraseña, addres:json[0].direccion, phone:json[0].telefono, email:json[0].correo});
     });
@@ -101,7 +101,7 @@ export default function Page() {
               return;
             }
             console.log(user[0]);
-            fetch("http://localhost/sql",{//se manda la peticion al servidor
+            fetch("https://pollopunto.onrender.com/sql",{//se manda la peticion al servidor
               method:"PUT",
               body:JSON.stringify({
                 tabla: "usuarios",

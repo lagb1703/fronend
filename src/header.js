@@ -29,7 +29,7 @@ function PayModal(promp){
                 alert("tienes que agragar una tarjeta valida");//le avisa al usuario que su tarjeta fue rechazada
                 return;
             }
-            fetch("http://localhost/pay",{//le mandamos la peticion al backen de la comprar
+            fetch("https://pollopunto.onrender.com/pay",{//le mandamos la peticion al backen de la comprar
                 method: "POST",
                 body:JSON.stringify({
                     id:paymentMethod.paymentMethod.id,
@@ -105,7 +105,7 @@ function Product(promp){
                 <button className="p-2 text-red-600 hover:text-red-500 text-3xl" onClick={(e)=>{
                     e.preventDefault();
                     if(PRODUCT.amount - amount > 0){//se pregunta si hay stock local
-                        fetch("http://localhost/user",{//se envia la peticion al backend para guardar el producto
+                        fetch("https://pollopunto.onrender.com/user",{//se envia la peticion al backend para guardar el producto
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
@@ -132,7 +132,7 @@ function Product(promp){
                 <button className="p-2 text-blue-600 hover:text-blue-500 text-3xl" onClick={(e)=>{
                     e.preventDefault();
                     if(amount > 1){//la unica forma de eliminar un producto del carrito es darle al boton eliminar
-                        fetch("http://localhost/user",{//se envia la peticion al servidor para liberar el producto
+                        fetch("https://pollopunto.onrender.com/user",{//se envia la peticion al servidor para liberar el producto
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
@@ -165,7 +165,7 @@ function Product(promp){
                                     break;
                                 }
                             }
-                            fetch("http://localhost/user",{//se hace la peticion al servidor
+                            fetch("https://pollopunto.onrender.com/user",{//se hace la peticion al servidor
                                 method:"PATCH",
                                 mode: 'cors',
                                 body:JSON.stringify({
@@ -228,7 +228,7 @@ export default function Header(){
      */
     function comprar(){
         contextCart.map((item)=>{
-            fetch("http://localhost/user",{//se envia la peticion al backend para guardar el producto
+            fetch("https://pollopunto.onrender.com/user",{//se envia la peticion al backend para guardar el producto
                 method:"PUT",
                 mode: 'cors',
                 body:JSON.stringify({

@@ -42,7 +42,7 @@ export default function PrincipalPage(){
                                               'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.'
                                               ));//aca se guardara el producto a mostrar, tiene un producto por defecto
   useEffect(()=>{//este useEffect se utiliza para
-    fetch("http://localhost/user",{//se piden los productos a la base de datos
+    fetch("https://pollopunto.onrender.com/user",{//se piden los productos a la base de datos
       method:"GET",
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ export default function PrincipalPage(){
                         return;
                       }
                     }
-                    fetch("http://localhost/user",{//se reserva el producto
+                    fetch("https://pollopunto.onrender.com/user",{//se reserva el producto
                             method:"PATCH",
                             mode: 'cors',
                             body:JSON.stringify({
