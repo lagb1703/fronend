@@ -59,6 +59,7 @@ export default function Page() {
   useEffect(()=>{
     fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=productos&limit=10")//se consulta los productos al backend
     .then((res)=>res.json()).then((json)=>{
+      json.imagenes = JSON.parse(json.imagenes);
       setProducts(json);
     });
     fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=usuarios&limit=1&where=nombre = '" + user[0].name + "'")//se consulta sobre el usuario en la base de datos
