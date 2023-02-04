@@ -247,8 +247,8 @@ export default function Login() {
                         alert("Algunos campos estan sin rellenar");
                         return;
                       }
-                      fetch("http://localhost/email?email="+email).then(res=>res.json()).then((json)=>{//se hace la peticion a la base de datos para verificar qi el correo esta en uo
-                        if(json){
+                      fetch("http://localhost/email?email="+email).then(res=>res.json()).then((json)=>{//se hace la peticion a la base de datos para verificar qi el correo esta en uso
+                        if(json.password !== ""){
                           alert("correo ya en uso");
                           return;
                         }
