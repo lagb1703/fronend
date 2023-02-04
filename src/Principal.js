@@ -50,9 +50,10 @@ export default function PrincipalPage(){
     }).then((res)=>res.json()).then((json)=>{
       let items = [];//se guardara los items
       json.map((product)=>{
-        items = items.concat({id:product.id, name:product.nombre, price:product.precio, description:product.descripcion, amount:product.cantidad, imageAlt:"poyo", images:product.imagenes});//se agrega un JSON con las prodiedades que vamos a usar
+        items = items.concat({id:product.id, name:product.nombre, price:product.precio, description:product.descripcion, amount:product.cantidad, imageAlt:"poyo", images:JSON.parse(product.imagenes)});//se agrega un JSON con las prodiedades que vamos a usar
         return "a";//retornamos algo para evitar un error en consola
       });
+      console.log(items[0].images[0]);
       setProducts(items);//se rellena el array
     });
   },[]);//se ejecuta cada ves que se renderize el componente
