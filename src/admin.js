@@ -4,11 +4,12 @@ import { useContext, useEffect, useState } from "react";//importamos los hooks
 function Product(promp){
   const user = useContext(u);//se obtiene el usuario
   const product = promp.product;//se obtiene el producto que se quiere representar
+  const imgs = JSON.parse(product.imagenes);
   return(
     <form className='flex gap-5 border-2 rounded-md justify-between'>{/*todo estara dentro de un form*/}
       <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>{/*Crea el marco para la imagen*/}
         <img 
-        src={product.imagenes[0]}//ponemos la imagen principal 
+        src={imgs[0]}//ponemos la imagen principal 
         alt="poyo"
         className='h-full w-full object-cover object-center'/>{/*se pone la imagen principal del producto*/}
       </div>
@@ -59,7 +60,7 @@ export default function Page() {
   useEffect(()=>{
     fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=productos&limit=10")//se consulta los productos al backend
     .then((res)=>res.json()).then((json)=>{
-      json.imagenes = JSON.parse(json.imagenes);
+      console.log(json);
       setProducts(json);
     });
     fetch("https://pollopunto.onrender.com/sql?selector=*&tabla=usuarios&limit=1&where=nombre = '" + user[0].name + "'")//se consulta sobre el usuario en la base de datos
