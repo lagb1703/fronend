@@ -1,6 +1,6 @@
-import {Link, useNavigate} from "react-router-dom";
-import { Fragment, useState, useContext, useEffect } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import {Link, useNavigate} from "react-router-dom";//importamos los a modificados de router y el hook useNavigate()
+import { Fragment, useState, useContext, useEffect } from 'react'//importamos los hooks
+import { Dialog, Transition } from '@headlessui/react'//
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { cart } from "./contex"; 
 import {loadStripe} from '@stripe/stripe-js';
@@ -12,7 +12,7 @@ const stripePromise = loadStripe('pk_test_51MXFXqCoW04gSSqlj7hURnPOUhPGQgJ6pFIzR
 function PayModal(promp){
     const comprar = promp.comprar;//se recoge la funcion para comprar
     const stripe = useStripe();//se hace la coneccion con stripe
-    const elements = useElements();
+    const elements = useElements();//se toma los valores de los inputs
     /**
      * 
      * @param {Event} e 
@@ -26,7 +26,7 @@ function PayModal(promp){
             card: elements.getElement(CardElement)//le entregamos el valor del inpit
         }).then((paymentMethod)=>{//obtenemos la repuesta
             if(!paymentMethod.paymentMethod){//observamos si se tiene un formato correcto
-                alert("tienes que agragar una tarjeta valida");
+                alert("tienes que agragar una tarjeta valida");//le avisa al usuario que su tarjeta fue rechazada
                 return;
             }
             fetch("http://localhost/pay",{//le mandamos la peticion al backen de la comprar
@@ -42,14 +42,14 @@ function PayModal(promp){
             }).then((res)=>{//obtenemos la repuesta
                 if(res.status === 204){//si el estatos es de 204 significa que se logro la compra
                     comprar();//eliminamos todo del carrito
-                    alert("pago procesado");
+                    alert("pago procesado");//le decimos que ya fue proceado el pago
                     return;
                 }
-                alert("hubo un error en el pago");
+                alert("hubo un error en el pago");//le habisa que ubo un error en el server
             });
         }).catch((e)=>{//obtenemos el error
             console.log(e);//lo imprimimos
-            alert("hubo un error en el pago");
+            alert("hubo un error en el pago");//le habisa que ubo un error en el server de stripe
         })
     }
     return(
@@ -194,7 +194,7 @@ function Product(promp){
 }
 
 export default function Header(){
-    const NAVIGATE = useNavigate();
+    const NAVIGATE = useNavigate();//utilizamos NAVIGATE para cambiar el renderizado y mostrar otras paginas
     const [open, setOpen] = useState(false);//se usa para redenriza el carrito si este esta en true
     const [total, setTotal] = useState(0);//SE UTILIZA PARA RENDERIZAR EL TOTAL
     const [contextCart, setContextCart] = useState(useContext(cart));//SE UTILIZA PARA RENDERIZAR LOS PRODUCTOS DEL CARRITO
@@ -241,7 +241,7 @@ export default function Header(){
                 })
             })
         });
-        contextCart.splice(0,contextCart.length);
+        contextCart.splice(0,contextCart.length);//se elimina todos los productos del carrito
         setTotal(0);
     }
     useEffect(()=>{//se usa useEffect para calcular el total que hay en el carrito
@@ -345,7 +345,7 @@ export default function Header(){
                                             </div>
                                             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>{/*frase de prueba puede cambiar en un futuro*/}
                                             <Elements stripe={stripePromise}>
-                                                <PayModal  amount={total} description={"es una compra"} comprar={comprar}/>
+                                                <PayModal  amount={total} description={"es una compra"} comprar={comprar}/>{/*renderizamos la vista de pagos*/}
                                             </Elements>
                                             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                                 <p>

@@ -1,5 +1,5 @@
-import {user as u} from "./contex";
-import { useContext, useEffect, useState } from "react";
+import {user as u} from "./contex";//imporrtamos los valores de context
+import { useContext, useEffect, useState } from "react";//importamos los hooks
 
 function Product(promp){
   const user = useContext(u);//se obtiene el usuario

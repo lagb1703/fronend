@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext } from "react";//importamos el hooks
 
 
 export const user = createContext([{name:"", type:0, password:""}]);//aca se guardara el usuario
